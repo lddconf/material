@@ -63,10 +63,9 @@ class PictureOfTheDayFragment : Fragment() {
 
 
     private fun showError(message: String?) {
-        message?.let {
-
+        message?.let { message
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
 }
