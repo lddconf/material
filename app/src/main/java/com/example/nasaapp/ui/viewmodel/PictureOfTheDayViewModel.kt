@@ -15,11 +15,28 @@ import retrofit2.Response
 
 class PictureOfTheDayViewModel() : ViewModel() {
     private val liveData: MutableLiveData<PictureOfTheDayData> = MutableLiveData()
+    private val isSearchMode : MutableLiveData<Boolean> = MutableLiveData()
+
     private val retrofitImp: IRetrofitPictureOfTheDay = RetrofitImp()
 
     fun getData(): LiveData<PictureOfTheDayData> {
         sendServerRequest()
         return liveData
+    }
+
+    fun getWikiSearchMode() : LiveData<Boolean> = isSearchMode
+
+    fun inWikiSearchRequested()  {
+        isSearchMode.value = true
+    }
+
+    fun disableWikiSearchMode() {
+        isSearchMode.value = false
+    }
+
+    fun performWikiSearch(word : String) {
+        disableWikiSearchMode()
+        liveData.value = PictureOfTheDayData.WikiSearch(word)
     }
 
     private fun sendServerRequest() {
@@ -53,4 +70,9 @@ class PictureOfTheDayViewModel() : ViewModel() {
                 })
         }
     }
+
+    init {
+        isSearchMode.value = false
+    }
+
 }

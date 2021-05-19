@@ -36,7 +36,7 @@ class PictureOfTheDayFragment : Fragment() {
         vb?.toolbar?.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_search -> {
-                    showMessage("Searchind...")
+                    viewModel.inWikiSearchRequested()
                     true
                 }
                 R.id.action_settings -> {
@@ -48,13 +48,43 @@ class PictureOfTheDayFragment : Fragment() {
         }
     }
 
+    private fun initWikiSearch() {
+        viewModel.getWikiSearchMode()
+            .observe(viewLifecycleOwner, Observer<Boolean> { isWikiSearchMode ->
+                if (isWikiSearchMode.not()) {
+                    vb?.appbarTitle?.visibility = View.VISIBLE
+                    vb?.inputTextLayout?.visibility = View.GONE
+                    vb?.inputEditText?.text?.clear()
+                    vb?.inputEditText?.requestFocus()
+                } else {
+                    vb?.appbarTitle?.visibility = View.GONE
+                    vb?.inputTextLayout?.visibility = View.VISIBLE
+                }
+            })
+
+        vb?.inputEditText?.setOnKeyListener { v, keyCode, event ->
+            return@setOnKeyListener if ((event.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                vb?.inputEditText?.let { edit ->
+                    if (!edit.text.isNullOrEmpty()) {
+                        viewModel.performWikiSearch(edit.text.toString())
+                    } else {
+                        viewModel.disableWikiSearchMode()
+                    }
+                }
+                true
+            } else {
+                false
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getData().observe(viewLifecycleOwner, Observer<PictureOfTheDayData> { pod ->
             renderData(pod)
         })
+        initWikiSearch()
     }
-
 
     private fun renderData(pod: PictureOfTheDayData) {
         when (pod) {
@@ -68,19 +98,13 @@ class PictureOfTheDayFragment : Fragment() {
                     loadImage(url)
                     vb?.bottomSheetPodDetails?.bottomSheetPodDetailsLayout?.apply {
                         val behavior = BottomSheetBehavior.from(this)
-                        val height = vb?.root?.height ?: 0 - (vb?.appBar?.height
-                            ?: 0) - (vb?.imageView?.height ?: 0)
-
                         var peekRevertHeightPx = 0
-
                         vb?.appBar?.let {
                             peekRevertHeightPx = it.y.toInt() + it.height
                         }
-
                         vb?.imageView?.let { view ->
                             peekRevertHeightPx += view.y.toInt() + view.height
                         }
-
                         var displayMetrics = DisplayMetrics()
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
                             requireActivity().display?.getRealMetrics(displayMetrics)
@@ -90,17 +114,13 @@ class PictureOfTheDayFragment : Fragment() {
                             @Suppress("DEPRECATION")
                             display?.getMetrics(displayMetrics)
                         }
-
                         behavior.peekHeight = displayMetrics.heightPixels - peekRevertHeightPx
 
                     }
-
                     vb?.bottomSheetPodDetails?.bottomSheetPodDescriptionHeader?.text =
                         pod.ofTheDayResponseData.title
                     vb?.bottomSheetPodDetails?.bottomSheetPodDescription?.text =
                         pod.ofTheDayResponseData.explanation
-
-
                 }
             }
             is PictureOfTheDayData.Error -> {
@@ -108,6 +128,9 @@ class PictureOfTheDayFragment : Fragment() {
             }
             is PictureOfTheDayData.Loading -> {
                 //Load Data
+            }
+            is PictureOfTheDayData.WikiSearch -> {
+                startWikiSearch(pod.url)
             }
         }
     }
