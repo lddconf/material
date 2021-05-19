@@ -78,12 +78,31 @@ class PictureOfTheDayFragment : Fragment() {
         }
     }
 
+    private fun initBottomSheet() {
+        vb?.bottomSheetPodDetails?.bottomSheetPodDetailsLayout?.apply {
+            val behavior = BottomSheetBehavior.from(this)
+            behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            vb?.bottomSheetPodDetails?.bottomSheetPodState?.isChecked = false
+                        }
+                        else -> vb?.bottomSheetPodDetails?.bottomSheetPodState?.isChecked = true
+                    }
+                }
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                }
+            })
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getData().observe(viewLifecycleOwner, Observer<PictureOfTheDayData> { pod ->
             renderData(pod)
         })
         initWikiSearch()
+        initBottomSheet()
     }
 
     private fun renderData(pod: PictureOfTheDayData) {

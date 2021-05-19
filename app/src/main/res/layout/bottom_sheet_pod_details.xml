@@ -12,6 +12,24 @@
     android:background="?attr/colorPrimary"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     >
+
+    <ToggleButton
+        android:id="@+id/bottom_sheet_pod_state"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        style="@style/Theme.NasaApp"
+        android:background="@drawable/expandable_button"
+        android:checked="false"
+        android:clickable="false"
+        android:text=""
+        android:textOff=""
+        android:textOn=""
+    />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
