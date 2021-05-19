@@ -3,6 +3,7 @@ package com.example.nasaapp.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
@@ -55,7 +56,6 @@ class PictureOfTheDayFragment : Fragment() {
     }
 
 
-
     private fun renderData(pod: PictureOfTheDayData) {
         when (pod) {
             is PictureOfTheDayData.Success -> {
@@ -68,12 +68,37 @@ class PictureOfTheDayFragment : Fragment() {
                     loadImage(url)
                     vb?.bottomSheetPodDetails?.bottomSheetPodDetailsLayout?.apply {
                         val behavior = BottomSheetBehavior.from(this)
-                        val height = vb?.root?.height?:0 - ( vb?.appBar?.height ?: 0) - (vb?.imageView?.height?:0)
-                        behavior.peekHeight = height
+                        val height = vb?.root?.height ?: 0 - (vb?.appBar?.height
+                            ?: 0) - (vb?.imageView?.height ?: 0)
+
+                        var peekRevertHeightPx = 0
+
+                        vb?.appBar?.let {
+                            peekRevertHeightPx = it.y.toInt() + it.height
+                        }
+
+                        vb?.imageView?.let { view ->
+                            peekRevertHeightPx += view.y.toInt() + view.height
+                        }
+
+                        var displayMetrics = DisplayMetrics()
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                            requireActivity().display?.getRealMetrics(displayMetrics)
+                        } else {
+                            @Suppress("DEPRECATION")
+                            val display = requireActivity().windowManager?.defaultDisplay
+                            @Suppress("DEPRECATION")
+                            display?.getMetrics(displayMetrics)
+                        }
+
+                        behavior.peekHeight = displayMetrics.heightPixels - peekRevertHeightPx
+
                     }
 
-                    vb?.bottomSheetPodDetails?.bottomSheetPodDescriptionHeader?.text = pod.ofTheDayResponseData.title
-                    vb?.bottomSheetPodDetails?.bottomSheetPodDescription?.text = pod.ofTheDayResponseData.explanation
+                    vb?.bottomSheetPodDetails?.bottomSheetPodDescriptionHeader?.text =
+                        pod.ofTheDayResponseData.title
+                    vb?.bottomSheetPodDetails?.bottomSheetPodDescription?.text =
+                        pod.ofTheDayResponseData.explanation
 
 
                 }
