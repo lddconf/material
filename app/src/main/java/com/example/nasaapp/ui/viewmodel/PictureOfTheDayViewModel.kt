@@ -35,8 +35,8 @@ class PictureOfTheDayViewModel() : ViewModel() {
                         call: Call<PictureOfTheDayResponseData>,
                         response: Response<PictureOfTheDayResponseData>
                     ) {
-                        if (response.isSuccessful && response.body() != null) {
-                            liveData.value = PictureOfTheDayData.Success(response.body()!!)
+                        liveData.value = if (response.isSuccessful && response.body() != null) {
+                            PictureOfTheDayData.Success(response.body()!!)
                         } else {
                             val message = response.message()
                             if (message.isNullOrEmpty()) {
@@ -48,7 +48,7 @@ class PictureOfTheDayViewModel() : ViewModel() {
                     }
 
                     override fun onFailure(call: Call<PictureOfTheDayResponseData>, t: Throwable) {
-                        PictureOfTheDayData.Error(t)
+                        liveData.value = PictureOfTheDayData.Error(t)
                     }
                 })
         }
