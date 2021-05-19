@@ -26,7 +26,7 @@ class PictureOfTheDayFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first, container, false)
+        return inflater.inflate(R.layout.picture_of_the_day_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,8 +46,8 @@ class PictureOfTheDayFragment : Fragment() {
             is PictureOfTheDayData.Success-> {
                 val url = pod.ofTheDayResponseData.url
                 if ( url.isNullOrEmpty() ) {
-
-
+                    //Load image data
+                    showError("Picture of the day url not found")
                 } else {
 
                 }
