@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:logo="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NasaApp">
+        android:theme="@style/Theme.NasaApp.Space">
 
         <activity
             android:name=".ui.MainActivity"
