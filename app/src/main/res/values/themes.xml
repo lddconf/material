@@ -4,6 +4,9 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/gray14</item>
         <item name="colorPrimaryVariant">@color/gray_800</item>
+        <item name="android:colorControlActivated">@color/gray_400</item>
+        <item name="colorOnSurface">@color/gray_400</item>
+
         <item name="colorOnPrimary">@color/gray_400</item>
         <item name="android:colorPrimaryDark">@color/gray14</item>
         <!-- Secondary brand color. -->
@@ -20,8 +23,10 @@
 
         <item name="android:windowBackground">@color/gray14</item>
         <item name="android:colorBackground">@color/gray14</item>
-        
         <item name="toolbarStyle">@style/Theme.NasaApp.PODAppBarStyle</item>
+        <item name="bottomSheetStyle">@style/Theme.NasaApp.PODBottomSheetDialog</item>
+        <item name="textInputStyle">@style/TextInputLayout</item>
+
     </style>
 
     <style name="Theme.NasaApp.NoActionBar">
@@ -34,25 +39,15 @@
         <item name="android:textColor">@color/gray_400</item>
     </style>
 
-
-    <style name="Theme.NasaApp.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="colorPrimary">@color/gray14</item>
-        <item name="colorPrimaryVariant">@color/gray_800</item>
-        <item name="colorOnPrimary">@color/gray_400</item>
-        <item name="colorOnSurface">@color/gray_400</item>
-        <item name="endIconTint">@color/gray_400</item>
-        <item name="android:textColorHint">@color/gray_400</item>
+    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="counterTextColor">@color/text_input_layout_helper_color</item>
+        <item name="helperTextTextColor">@color/text_input_layout_helper_color</item>
         <item name="boxStrokeColor">@color/edit_text_box_border</item>
-        <item name="hintTextColor">@color/purple_A100</item>
+        <item name="hintTextColor">@color/text_input_layout_indicator_text_color</item>
     </style>
 
-
-    <style name="PODBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
-        <item name="background">@color/gray14</item>
-        <item name="android:textColorPrimary">@color/gray_400</item>
-        <item name="android:textColorSecondary">@color/gray_700</item>
-        <item name="android:colorPrimaryDark">@color/gray14</item>
-        <item name="android:colorControlNormal">@color/gray_400</item>
+    <style name="Theme.NasaApp.PODBottomSheetDialog">
+        <item name="android:background">@color/gray14</item>
         <item name="android:textColor">@color/gray_400</item>
     </style>
 </resources>
