@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/Theme.NasaApp.AppBarOverlay">
+        android:theme="?attr/toolbarStyle">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.NasaApp.PopupOverlay">
+            app:popupTheme="?attr/toolbarStyle">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                     android:visibility="visible"
                     android:text="@string/app_name"
                     android:textSize="17sp"
-                    android:gravity="center_vertical|center_horizontal"
+                    android:gravity="center_vertical"
                     android:layout_marginStart="20dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -76,7 +76,8 @@
             android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_horizontal|top"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/photo_of_the_day_stub"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
