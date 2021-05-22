@@ -12,6 +12,7 @@ import com.example.nasaapp.R
 import com.example.nasaapp.databinding.FragmentSettingsBinding
 import com.example.nasaapp.model.IThemeProvider
 import com.example.nasaapp.model.ThemeHolder
+import com.example.nasaapp.model.navigation.NavCommands
 import com.example.nasaapp.ui.viewmodel.SettingsViewModel
 
 
@@ -20,12 +21,12 @@ import com.example.nasaapp.ui.viewmodel.SettingsViewModel
  */
 class SettingsFragment : Fragment() {
     private var vb: FragmentSettingsBinding? = null
-
+    private val navController by lazy { findNavController() }
+    private var currentThemeResourceId = ThemeHolder.NasaAppThemes.BlackTheme
     private val viewModel: SettingsViewModel by lazy {
         ViewModelProviders.of(this).get(SettingsViewModel::class.java)
     }
-
-    private var currentThemeResourceId = ThemeHolder.NasaAppThemes.BlackTheme
+    private var themeProvider: IThemeProvider? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,18 +37,43 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.getTheme().observe(viewLifecycleOwner, Observer<ThemeHolder> { theme ->
-            setTheme(theme.themeId)
-        })
+        setupViewModel()
         initAppBar()
-        loadThemeSettings()
+        loadCurrentTheme()
         initThemeSelector()
+        initThemeProvider()
+    }
+
+    private fun initThemeProvider() {
+        if (activity is IThemeProvider) {
+            themeProvider = activity as IThemeProvider
+        }
+    }
+
+    private fun setupViewModel() {
+        viewModel.themeLD().observe(viewLifecycleOwner, Observer<ThemeHolder> { theme ->
+            setupTheme(theme.themeId)
+        })
+        viewModel.navCommandsLD().observe(viewLifecycleOwner, Observer<NavCommands> { command ->
+            makeNavigation(command)
+        })
+    }
+
+    private fun makeNavigation(command: NavCommands) {
+        when (command) {
+            is NavCommands.OnBackCommand -> {
+                onBackPressed()
+            }
+            else -> {
+                //Some stuff
+            }
+        }
     }
 
     private fun initThemeSelector() {
-        vb?.themeSelection?.isChecked = currentThemeResourceId == ThemeHolder.NasaAppThemes.BlackTheme
-        vb?.themeSelection?.setOnCheckedChangeListener { buttonView, isChecked ->
+        vb?.themeSelection?.isChecked =
+            currentThemeResourceId == ThemeHolder.NasaAppThemes.BlackTheme
+        vb?.themeSelection?.setOnCheckedChangeListener { _, isChecked ->
             val theme = if (isChecked) {
                 ThemeHolder.NasaAppThemes.BlackTheme
             } else {
@@ -57,13 +83,13 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun setTheme(themeId: ThemeHolder.NasaAppThemes) {
+    private fun setupTheme(themeId: ThemeHolder.NasaAppThemes) {
         if (currentThemeResourceId != themeId) {
             (requireActivity() as IThemeProvider).setCurrentTheme(themeId)
         }
     }
 
-    private fun loadThemeSettings() {
+    private fun loadCurrentTheme() {
         currentThemeResourceId = (activity as IThemeProvider).getCurrentTheme()
         viewModel.setTheme(currentThemeResourceId)
     }
@@ -78,9 +104,11 @@ class SettingsFragment : Fragment() {
         vb?.toolbar?.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
         vb?.toolbar?.setTitle(R.string.app_name)
         vb?.toolbar?.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            viewModel.onBackPressed()
         }
     }
 
-
+    private fun onBackPressed() {
+        navController.popBackStack()
+    }
 }
