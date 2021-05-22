@@ -10,12 +10,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:logo="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NasaApp.Space">
+        android:theme="@style/Theme.NasaApp.NasaAppStrange">
 
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.NasaApp.NoActionBar">
+            android:theme="@style/Theme.NasaApp.NasaAppStrange.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -5,4 +5,5 @@ sealed class PictureOfTheDayData {
     data class Error(val error: Throwable) : PictureOfTheDayData()
     data class Loading(val process: Int?) : PictureOfTheDayData()
     data class WikiSearch(val url : String) : PictureOfTheDayData()
+    object Settings : PictureOfTheDayData()
 }
