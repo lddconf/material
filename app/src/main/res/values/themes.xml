@@ -27,8 +27,9 @@
         <item name="toolbarStyle">@style/PODAppBarStyle</item>
         <item name="bottomSheetStyle">@style/Theme.NasaApp.PODBottomSheetDialog</item>
         <item name="textInputStyle">@style/TextInputLayout</item>
-        <item name="switchStyle">@style/settings_switch_style</item>
+        <item name="switchStyle">@style/SettingsSwitchStyle</item>
         <item name="windowActionBarOverlay">false</item>
+        <item name="bottomNavigationStyle">@style/BottomNavigationStyle</item>
     </style>
 
     <style name="Theme.NasaApp.NoActionBar">
@@ -78,11 +79,16 @@
         <item name="android:textSize">@dimen/toolbar_app_title</item>
     </style>
 
-    <style name="settings_switch_style" parent="Widget.MaterialComponents.CompoundButton.Switch">
+    <style name="SettingsSwitchStyle" parent="Widget.MaterialComponents.CompoundButton.Switch">
         <item name="colorSecondaryVariant">?attr/colorSecondaryVariant</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textSize">20sp</item>
         <item name="android:layout_marginStart">10dp</item>
         <item name="android:layout_marginEnd">10dp</item>
     </style>
+
+    <style name="BottomNavigationStyle" parent="@style/Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="colorPrimary">?attr/colorSecondaryVariant</item>
+    </style>
+
 </resources>
