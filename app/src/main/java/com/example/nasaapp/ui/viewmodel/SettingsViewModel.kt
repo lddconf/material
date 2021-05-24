@@ -11,13 +11,19 @@ class SettingsViewModel(private val themeProvider: IThemeProvider?) : ViewModel(
     private val navCommands: MutableLiveData<NavCommands> = MutableLiveData()
 
     fun themeLD(): LiveData<ThemeHolder> = liveData
-    fun setTheme(themeId: ThemeHolder.NasaAppThemes) {
+    fun setTheme(themeId: ThemeHolder.NasaAppThemes) : Boolean {
         themeProvider?.let { provider->
-            if ( provider.getCurrentTheme() != themeId ) {
+            if ( provider.cTheme != themeId ) {
+                provider.cTheme = themeId
                 liveData.value = ThemeHolder(themeId)
-                provider.setCurrentTheme(themeId)
+                return true
             }
         }
+        return false
+    }
+
+    fun applyTheme() {
+        navCommands.value = NavCommands.RecreateActivity
     }
 
     fun navCommandsLD(): LiveData<NavCommands> = navCommands
@@ -39,7 +45,7 @@ class SettingsViewModel(private val themeProvider: IThemeProvider?) : ViewModel(
 
     init {
         themeProvider?.let {
-            liveData.value = ThemeHolder(themeProvider.getCurrentTheme())
+            liveData.value = ThemeHolder(themeProvider.cTheme)
         }
     }
 }

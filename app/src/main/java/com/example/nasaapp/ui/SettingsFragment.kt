@@ -22,11 +22,9 @@ import com.example.nasaapp.ui.viewmodel.SettingsViewModel
 class SettingsFragment : Fragment() {
     private var vb: FragmentSettingsBinding? = null
     private val navController by lazy { findNavController() }
-//    private var currentThemeResourceId = ThemeHolder.NasaAppThemes.BlackTheme
     private val viewModel: SettingsViewModel by lazy {
-        ViewModelProviders.of(this, SettingsViewModel.getSettingsViewModelFactory(activity as IThemeProvider)).get(SettingsViewModel::class.java)
+        ViewModelProviders.of(this, SettingsViewModel.getSettingsViewModelFactory(App.themeProvider)).get(SettingsViewModel::class.java)
     }
-//    private var themeProvider: IThemeProvider? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,18 +35,15 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewModel()
         initAppBar()
-//        loadCurrentTheme()
-        initThemeSelector()
-//        initThemeProvider()
+        setupViewModel()
+
     }
 
-//    private fun initThemeProvider() {
-//        if (activity is IThemeProvider) {
-//            themeProvider = activity as IThemeProvider
-//        }
-//    }
+    override fun onStart() {
+        super.onStart()
+        initThemeSelector()
+    }
 
     private fun setupViewModel() {
         viewModel.themeLD().observe(viewLifecycleOwner, Observer<ThemeHolder> { theme ->
@@ -61,9 +56,7 @@ class SettingsFragment : Fragment() {
 
     private fun navigate(command: NavCommands) {
         when (command) {
-            is NavCommands.OnBackCommand -> {
-                onBackPressed()
-            }
+            is NavCommands.OnBackCommand -> onBackPressed()
             else -> {
                 //Some stuff
             }
@@ -77,13 +70,17 @@ class SettingsFragment : Fragment() {
             } else {
                 ThemeHolder.NasaAppThemes.LightTheme
             }
-            viewModel.setTheme(theme)
+            if ( viewModel.setTheme(theme) ) {
+                requireActivity().recreate()
+            }
         }
     }
 
     private fun themeChanged(themeId: ThemeHolder.NasaAppThemes) {
-        vb?.themeSelection?.isChecked =
-            themeId == ThemeHolder.NasaAppThemes.BlackTheme
+        val newTheme = themeId == ThemeHolder.NasaAppThemes.BlackTheme
+        if ( newTheme != vb?.themeSelection?.isChecked ) {
+            vb?.themeSelection?.isChecked = newTheme
+        }
     }
 
     override fun onDestroyView() {
