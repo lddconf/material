@@ -1,4 +1,4 @@
-package com.example.nasaapp.ui
+package com.example.nasaapp.ui.fragments
 
 import android.content.Intent
 import android.net.Uri
@@ -17,7 +17,7 @@ import com.example.nasaapp.ui.viewmodel.PictureOfTheDayViewModel
 import coil.api.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class PictureOfTheDayFragment : Fragment() {
+class PictureOfTheDayFragment : Fragment(), IBackPressableFragment {
     private val viewModel: PictureOfTheDayViewModel by lazy {
         ViewModelProviders.of(this).get(PictureOfTheDayViewModel::class.java)
     }
@@ -53,13 +53,15 @@ class PictureOfTheDayFragment : Fragment() {
         viewModel.getWikiSearchMode()
             .observe(viewLifecycleOwner, Observer<Boolean> { isWikiSearchMode ->
                 if (isWikiSearchMode.not()) {
-                    vb?.appbarTitle?.visibility = View.VISIBLE
-                    vb?.inputTextLayout?.visibility = View.GONE
-                    vb?.inputEditText?.text?.clear()
-                    vb?.inputEditText?.requestFocus()
+//                    vb?.appbarTitle?.visibility = View.VISIBLE
+//                    vb?.inputTextLayout?.visibility = View.GONE
+//                    vb?.inputEditText?.text?.clear()
+//                    vb?.inputEditText?.requestFocus()
+                    showWikiSearch()
                 } else {
-                    vb?.appbarTitle?.visibility = View.GONE
-                    vb?.inputTextLayout?.visibility = View.VISIBLE
+//                    vb?.appbarTitle?.visibility = View.GONE
+//                    vb?.inputTextLayout?.visibility = View.VISIBLE
+                    hideWikiSearch()
                 }
             })
 
@@ -77,6 +79,18 @@ class PictureOfTheDayFragment : Fragment() {
                 false
             }
         }
+    }
+
+    private fun showWikiSearch() {
+        vb?.appbarTitle?.visibility = View.VISIBLE
+        vb?.inputTextLayout?.visibility = View.GONE
+        vb?.inputEditText?.text?.clear()
+        vb?.inputEditText?.requestFocus()
+    }
+
+    private fun hideWikiSearch() {
+        vb?.appbarTitle?.visibility = View.GONE
+        vb?.inputTextLayout?.visibility = View.VISIBLE
     }
 
     private fun initBottomSheet() {
@@ -149,7 +163,7 @@ class PictureOfTheDayFragment : Fragment() {
             is PictureOfTheDayData.Loading -> {
                 //Load Data
             }
-            is PictureOfTheDayData.WikiSearch -> {
+            is PictureOfTheDayData.PerformWikiSearch -> {
                 startWikiSearch(pod.url)
             }
             is PictureOfTheDayData.Settings -> {
@@ -174,7 +188,6 @@ class PictureOfTheDayFragment : Fragment() {
 
     private fun showMessage(message: String?) {
         message?.let {
-            message
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
     }
@@ -182,5 +195,9 @@ class PictureOfTheDayFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         vb = null
+    }
+
+    override fun backPressed() : Boolean {
+        return viewModel.onBackPressed()
     }
 }

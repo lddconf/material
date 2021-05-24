@@ -1,7 +1,8 @@
-package com.example.nasaapp.ui
+package com.example.nasaapp.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -10,9 +11,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.nasaapp.R
 import com.example.nasaapp.databinding.FragmentSettingsBinding
-import com.example.nasaapp.model.IThemeProvider
 import com.example.nasaapp.model.ThemeHolder
 import com.example.nasaapp.model.navigation.NavCommands
+import com.example.nasaapp.ui.App
 import com.example.nasaapp.ui.viewmodel.SettingsViewModel
 
 

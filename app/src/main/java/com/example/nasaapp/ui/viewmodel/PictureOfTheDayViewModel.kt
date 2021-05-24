@@ -13,7 +13,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class PictureOfTheDayViewModel() : ViewModel() {
+class PictureOfTheDayViewModel() : ViewModel(), IBackPressedVModel {
     private val liveData: MutableLiveData<PictureOfTheDayData> = MutableLiveData()
     private val isSearchMode : MutableLiveData<Boolean> = MutableLiveData()
 
@@ -40,7 +40,7 @@ class PictureOfTheDayViewModel() : ViewModel() {
 
     fun performWikiSearch(word : String) {
         disableWikiSearchMode()
-        liveData.value = PictureOfTheDayData.WikiSearch(word)
+        liveData.value = PictureOfTheDayData.PerformWikiSearch(word)
     }
 
     private fun sendServerRequest() {
@@ -73,6 +73,16 @@ class PictureOfTheDayViewModel() : ViewModel() {
                     }
                 })
         }
+    }
+
+    override fun onBackPressed() : Boolean {
+        isSearchMode.value?.let { status ->
+            if ( status ) {
+                isSearchMode.value = false
+                return true
+            }
+        }
+        return false
     }
 
     init {
