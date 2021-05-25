@@ -28,39 +28,39 @@ class MainActivity : AppCompatActivity() {
         vb = ActivityMainBinding.inflate(layoutInflater)
         setTheme(App.themeProvider.getCurrentThemeResourceID())
         setContentView(vb?.root)
-        initBottomNavigation()
+//        initBottomNavigation()
     }
 
-    private fun initBottomNavigation() {
-        vb?.bottomNavigation?.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.page_pod -> {
-                    viewModel.toPOD()
-                    true
-                }
-                R.id.page_news -> {
-                    viewModel.toNews()
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
-    private fun viewModelSubscription() {
-        viewModel.getScreens().observe(this, Observer { navCommands->
-            when (navCommands) {
-                is NavCommands.PictureOfTheDay -> {
-                    navHostFragment?.findNavController()?.navigate(R.id.pod_fragment)
-                    vb?.bottomNavigation?.selectedItemId = R.id.page_pod
-                }
-                is NavCommands.News -> {
-                    navHostFragment?.findNavController()?.navigate(R.id.settings_fragment)
-                    vb?.bottomNavigation?.selectedItemId = R.id.page_news
-                }
-            }
-        })
-    }
+//    private fun initBottomNavigation() {
+//        vb?.bottomNavigation?.setOnNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.page_pod -> {
+//                    viewModel.toPOD()
+//                    true
+//                }
+//                R.id.page_news -> {
+//                    viewModel.toNews()
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
+//    }
+//
+//    private fun viewModelSubscription() {
+//        viewModel.getScreens().observe(this, Observer { navCommands->
+//            when (navCommands) {
+//                is NavCommands.PictureOfTheDay -> {
+//                    navHostFragment?.findNavController()?.navigate(R.id.pod_fragment)
+//                    vb?.bottomNavigation?.selectedItemId = R.id.page_pod
+//                }
+//                is NavCommands.News -> {
+//                    navHostFragment?.findNavController()?.navigate(R.id.settings_fragment)
+//                    vb?.bottomNavigation?.selectedItemId = R.id.page_news
+//                }
+//            }
+//        })
+//    }
 
     override fun onBackPressed() {
         navHostFragment?.childFragmentManager?.fragments?.forEach { fragment ->
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        super.onBackPressed()
+        this.finish()
     }
 
     override fun onDestroy() {

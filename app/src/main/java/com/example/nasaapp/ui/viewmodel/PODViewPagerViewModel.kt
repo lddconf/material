@@ -13,14 +13,13 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class PictureOfTheDayViewModel(val day : String? = null) : ViewModel(), IBackPressedVModel {
+class PODViewPagerViewModel() : ViewModel(), IBackPressedVModel {
     private val liveData: MutableLiveData<PictureOfTheDayData> = MutableLiveData()
     private val isSearchMode: MutableLiveData<Boolean> = MutableLiveData()
 
     private val retrofitImp: IRetrofitPictureOfTheDay = RetrofitImp()
 
     fun getData(): LiveData<PictureOfTheDayData> {
-        sendServerRequest()
         return liveData
     }
 
@@ -41,42 +40,6 @@ class PictureOfTheDayViewModel(val day : String? = null) : ViewModel(), IBackPre
     fun performWikiSearch(word: String) {
         disableWikiSearchMode()
         liveData.value = PictureOfTheDayData.PerformWikiSearch(word)
-    }
-
-    private fun sendServerRequest() {
-        liveData.value = PictureOfTheDayData.Loading(null)
-        val apiKey = BuildConfig.NASA_API_KEY
-
-        if (apiKey.isBlank()) {
-            PictureOfTheDayData.Error(Throwable("Need Nasa API key"))
-        } else {
-            val apiCall =  day?.let { day->
-                retrofitImp.retrofitImpl().pictureForTheDay(day, apiKey)
-            } ?: retrofitImp.retrofitImpl().pictureOfTheDay(apiKey)
-
-            apiCall.enqueue(
-                object : Callback<PictureOfTheDayResponseData> {
-                    override fun onResponse(
-                        call: Call<PictureOfTheDayResponseData>,
-                        response: Response<PictureOfTheDayResponseData>
-                    ) {
-                        liveData.value = if (response.isSuccessful && response.body() != null) {
-                            PictureOfTheDayData.Success(response.body()!!)
-                        } else {
-                            val message = response.message()
-                            if (message.isNullOrEmpty()) {
-                                PictureOfTheDayData.Error(Throwable("Api internal error"))
-                            } else {
-                                PictureOfTheDayData.Error(Throwable(Throwable(message)))
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<PictureOfTheDayResponseData>, t: Throwable) {
-                        liveData.value = PictureOfTheDayData.Error(t)
-                    }
-                })
-        }
     }
 
     override fun onBackPressed(): Boolean {

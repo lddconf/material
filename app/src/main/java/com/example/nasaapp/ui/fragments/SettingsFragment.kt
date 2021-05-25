@@ -20,7 +20,7 @@ import com.example.nasaapp.ui.viewmodel.SettingsViewModel
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(), IBackPressableFragment {
     private var vb: FragmentSettingsBinding? = null
     private val navController by lazy { findNavController() }
     private val viewModel: SettingsViewModel by lazy {
@@ -98,7 +98,11 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    override fun backPressed(): Boolean {
+        return viewModel.onBackPressed()
+    }
+
     private fun onBackPressed() {
-        navController.popBackStack()
+        navController.navigate(R.id.pod_view_pager_fragment)
     }
 }

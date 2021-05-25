@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/pod_fragment">
+    app:startDestination="@id/pod_view_pager_fragment">
 
     <fragment
-        android:id="@+id/pod_fragment"
-        android:name="com.example.nasaapp.ui.fragments.PictureOfTheDayFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/picture_of_the_day_fragment">
+        android:id="@+id/pod_view_pager_fragment"
+        android:name="com.example.nasaapp.ui.fragments.PODViewPagerFragment"
+        android:label="@string/pod_view_pager_fragment_label"
+        tools:layout="@layout/view_pager_pod_layout">
 
         <action
             android:id="@+id/action_pod_settings"
@@ -18,11 +18,11 @@
     <fragment
         android:id="@+id/settings_fragment"
         android:name="com.example.nasaapp.ui.fragments.SettingsFragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/settings_fragment_label"
         tools:layout="@layout/fragment_settings">
 
         <action
             android:id="@+id/action_settings_to_pod_fragment"
-            app:destination="@id/pod_fragment" />
+            app:destination="@id/pod_view_pager_fragment" />
     </fragment>
 </navigation>

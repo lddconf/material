@@ -8,18 +8,26 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.nasaapp.R
 import com.example.nasaapp.databinding.PictureOfTheDayFragmentBinding
 import com.example.nasaapp.model.PictureOfTheDayData
 import com.example.nasaapp.ui.viewmodel.PictureOfTheDayViewModel
 import coil.api.load
+import com.example.nasaapp.model.IThemeProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import java.lang.IllegalArgumentException
+import java.text.SimpleDateFormat
+import java.util.*
 
-class PictureOfTheDayFragment : Fragment(), IBackPressableFragment {
+class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPressableFragment {
     private val viewModel: PictureOfTheDayViewModel by lazy {
-        ViewModelProviders.of(this).get(PictureOfTheDayViewModel::class.java)
+        ViewModelProviders.of(this, getPODViewModelFactory(lastDayOffset))
+            .get(PictureOfTheDayViewModel::class.java)
     }
     private var vb: PictureOfTheDayFragmentBinding? = null
 
@@ -28,70 +36,7 @@ class PictureOfTheDayFragment : Fragment(), IBackPressableFragment {
         savedInstanceState: Bundle?
     ): View? = PictureOfTheDayFragmentBinding.inflate(inflater, container, false).also {
         vb = it
-        initAppBar()
     }.root
-
-    private fun initAppBar() {
-        setHasOptionsMenu(true)
-        vb?.toolbar?.inflateMenu(R.menu.picture_of_the_day_menu)
-        vb?.toolbar?.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_search -> {
-                    viewModel.inWikiSearchRequested()
-                    true
-                }
-                R.id.action_settings -> {
-                    viewModel.appSettingsRequested()
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
-    private fun initWikiSearch() {
-        viewModel.getWikiSearchMode()
-            .observe(viewLifecycleOwner, Observer<Boolean> { isWikiSearchMode ->
-                if (isWikiSearchMode.not()) {
-//                    vb?.appbarTitle?.visibility = View.VISIBLE
-//                    vb?.inputTextLayout?.visibility = View.GONE
-//                    vb?.inputEditText?.text?.clear()
-//                    vb?.inputEditText?.requestFocus()
-                    showWikiSearch()
-                } else {
-//                    vb?.appbarTitle?.visibility = View.GONE
-//                    vb?.inputTextLayout?.visibility = View.VISIBLE
-                    hideWikiSearch()
-                }
-            })
-
-        vb?.inputEditText?.setOnKeyListener { v, keyCode, event ->
-            return@setOnKeyListener if ((event.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                vb?.inputEditText?.let { edit ->
-                    if (!edit.text.isNullOrEmpty()) {
-                        viewModel.performWikiSearch(edit.text.toString())
-                    } else {
-                        viewModel.disableWikiSearchMode()
-                    }
-                }
-                true
-            } else {
-                false
-            }
-        }
-    }
-
-    private fun showWikiSearch() {
-        vb?.appbarTitle?.visibility = View.VISIBLE
-        vb?.inputTextLayout?.visibility = View.GONE
-        vb?.inputEditText?.text?.clear()
-        vb?.inputEditText?.requestFocus()
-    }
-
-    private fun hideWikiSearch() {
-        vb?.appbarTitle?.visibility = View.GONE
-        vb?.inputTextLayout?.visibility = View.VISIBLE
-    }
 
     private fun initBottomSheet() {
         vb?.bottomSheetPodDetails?.bottomSheetPodDetailsLayout?.apply {
@@ -105,6 +50,7 @@ class PictureOfTheDayFragment : Fragment(), IBackPressableFragment {
                         else -> vb?.bottomSheetPodDetails?.bottomSheetPodState?.isChecked = true
                     }
                 }
+
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 }
             })
@@ -116,7 +62,6 @@ class PictureOfTheDayFragment : Fragment(), IBackPressableFragment {
         viewModel.getData().observe(viewLifecycleOwner, Observer<PictureOfTheDayData> { pod ->
             renderData(pod)
         })
-        initWikiSearch()
         initBottomSheet()
     }
 
@@ -133,23 +78,24 @@ class PictureOfTheDayFragment : Fragment(), IBackPressableFragment {
                     vb?.bottomSheetPodDetails?.bottomSheetPodDetailsLayout?.apply {
                         val behavior = BottomSheetBehavior.from(this)
                         var peekRevertHeightPx = 0
-                        vb?.appBar?.let {
-                            peekRevertHeightPx = it.y.toInt() + it.height
-                        }
+//                        vb?.podDetailsLayout?.let {
+//                            peekRevertHeightPx = it.y.toInt() // + it.height
+//                        }
                         vb?.imageView?.let { view ->
                             peekRevertHeightPx += view.y.toInt() + view.height
                         }
-                        var displayMetrics = DisplayMetrics()
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                            requireActivity().display?.getRealMetrics(displayMetrics)
-                        } else {
-                            @Suppress("DEPRECATION")
-                            val display = requireActivity().windowManager?.defaultDisplay
-                            @Suppress("DEPRECATION")
-                            display?.getMetrics(displayMetrics)
-                        }
-                        behavior.peekHeight = displayMetrics.heightPixels - peekRevertHeightPx
 
+//                        val displayMetrics = DisplayMetrics()
+//                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+//                            requireActivity().display?.getRealMetrics(displayMetrics)
+//                        } else {
+//                            @Suppress("DEPRECATION")
+//                            val display = requireActivity().windowManager?.defaultDisplay
+//                            @Suppress("DEPRECATION")
+//                            display?.getMetrics(displayMetrics)
+//                        }
+                        val layoutHeight = vb?.podDetailsLayout?.height ?: 0
+                        behavior.peekHeight = layoutHeight - peekRevertHeightPx
                     }
                     vb?.bottomSheetPodDetails?.bottomSheetPodDescriptionHeader?.text =
                         pod.ofTheDayResponseData.title
@@ -163,12 +109,6 @@ class PictureOfTheDayFragment : Fragment(), IBackPressableFragment {
             is PictureOfTheDayData.Loading -> {
                 //Load Data
             }
-            is PictureOfTheDayData.PerformWikiSearch -> {
-                startWikiSearch(pod.url)
-            }
-            is PictureOfTheDayData.Settings -> {
-                findNavController().navigate(R.id.action_pod_settings)
-            }
         }
     }
 
@@ -178,12 +118,6 @@ class PictureOfTheDayFragment : Fragment(), IBackPressableFragment {
             error(R.drawable.ic_load_error_vector)
             placeholder(R.drawable.ic_no_photo_vector)
         }
-    }
-
-    private fun startWikiSearch(text: String) {
-        startActivity(Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("https://en.wikipedia.org/wiki/$text")
-        })
     }
 
     private fun showMessage(message: String?) {
@@ -197,7 +131,58 @@ class PictureOfTheDayFragment : Fragment(), IBackPressableFragment {
         vb = null
     }
 
-    override fun backPressed() : Boolean {
+    override fun backPressed(): Boolean {
         return viewModel.onBackPressed()
     }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(dayOffset: Int) = PictureOfTheDayFragment(dayOffset)
+
+        private fun getPODViewModelFactory(lastDayOffset: Int): ViewModelProvider.Factory {
+            return PODViewModelFactory(lastDayOffset)
+        }
+    }
+
+    private class PODViewModelFactory(val lastDayOffset: Int) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (lastDayOffset < 0) throw IllegalArgumentException("Invalid lastDayOffset parameter")
+            var date: String? = null
+
+            if (lastDayOffset > 0) {
+                val calendar = Calendar.getInstance()
+                calendar.add(Calendar.DATE, -lastDayOffset)
+                val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                date = formatter.format(calendar.time)
+            }
+            return modelClass.getConstructor(String::class.java).newInstance(date)
+        }
+    }
+//    private fun initBottomNavigation() {
+//        vb?.bottomNavigation?.setOnNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.page_pod -> {
+////                    viewModel.toPOD()
+//                    true
+//                }
+//                R.id.page_news -> {
+////                    viewModel.toNews()
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
+//    }
+
+
+//    inner class PODForDaysFSAdapter(val fragment: Fragment, val lastDays : Int) : FragmentStateAdapter(fragment) {
+//        override fun getItemCount(): Int {
+//
+//            return tabsViewPresenter.itemCount()
+//        }
+//
+//        override fun createFragment(position: Int) =
+//            tabsViewPresenter.fragmentFactory(position)?.createInstance() ?: Fragment()
+//
+//    }
 }
