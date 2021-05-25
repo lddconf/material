@@ -75,32 +75,24 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
                 } else {
                     //Load data into container
                     loadImage(url)
-                    vb?.bottomSheetPodDetails?.bottomSheetPodDetailsLayout?.apply {
-                        val behavior = BottomSheetBehavior.from(this)
-                        var peekRevertHeightPx = 0
-//                        vb?.podDetailsLayout?.let {
-//                            peekRevertHeightPx = it.y.toInt() // + it.height
-//                        }
-                        vb?.imageView?.let { view ->
-                            peekRevertHeightPx += view.y.toInt() + view.height
+                    vb?.apply {
+                        bottomSheetPodDetails.apply {
+                            bottomSheetPodDetailsLayout.apply {
+                                val behavior = BottomSheetBehavior.from(this)
+                                var peekRevertHeightPx = 0
+                                vb?.imageView?.let { view ->
+                                    peekRevertHeightPx += view.y.toInt() + view.height
+                                }
+                                val layoutHeight = vb?.podDetailsLayout?.height ?: 0
+                                behavior.peekHeight = layoutHeight - peekRevertHeightPx
+                            }
+                            bottomSheetPodDescriptionHeader.text =
+                                pod.ofTheDayResponseData.title
+                            bottomSheetPodDescription.text =
+                                pod.ofTheDayResponseData.explanation
+                            bottomSheetPodDateStamp.text = pod.ofTheDayResponseData.date
                         }
-
-//                        val displayMetrics = DisplayMetrics()
-//                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-//                            requireActivity().display?.getRealMetrics(displayMetrics)
-//                        } else {
-//                            @Suppress("DEPRECATION")
-//                            val display = requireActivity().windowManager?.defaultDisplay
-//                            @Suppress("DEPRECATION")
-//                            display?.getMetrics(displayMetrics)
-//                        }
-                        val layoutHeight = vb?.podDetailsLayout?.height ?: 0
-                        behavior.peekHeight = layoutHeight - peekRevertHeightPx
                     }
-                    vb?.bottomSheetPodDetails?.bottomSheetPodDescriptionHeader?.text =
-                        pod.ofTheDayResponseData.title
-                    vb?.bottomSheetPodDetails?.bottomSheetPodDescription?.text =
-                        pod.ofTheDayResponseData.explanation
                 }
             }
             is PictureOfTheDayData.Error -> {
@@ -158,31 +150,4 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
             return modelClass.getConstructor(String::class.java).newInstance(date)
         }
     }
-//    private fun initBottomNavigation() {
-//        vb?.bottomNavigation?.setOnNavigationItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.page_pod -> {
-////                    viewModel.toPOD()
-//                    true
-//                }
-//                R.id.page_news -> {
-////                    viewModel.toNews()
-//                    true
-//                }
-//                else -> false
-//            }
-//        }
-//    }
-
-
-//    inner class PODForDaysFSAdapter(val fragment: Fragment, val lastDays : Int) : FragmentStateAdapter(fragment) {
-//        override fun getItemCount(): Int {
-//
-//            return tabsViewPresenter.itemCount()
-//        }
-//
-//        override fun createFragment(position: Int) =
-//            tabsViewPresenter.fragmentFactory(position)?.createInstance() ?: Fragment()
-//
-//    }
 }
