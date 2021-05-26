@@ -6,19 +6,21 @@ import androidx.lifecycle.ViewModel
 import com.example.nasaapp.model.navigation.NavCommands
 
 class MainActivityViewModel : ViewModel() {
-    val currentScreen = MutableLiveData<NavCommands>()
-
+    private val currentScreen = MutableLiveData<NavCommands>()
     fun getScreens() : LiveData<NavCommands>  = currentScreen
 
     fun toPOD() {
         currentScreen.value = NavCommands.PictureOfTheDay
     }
 
-    fun toNews() {
-        currentScreen.value = NavCommands.News
+    fun toAbout() {
+        currentScreen.value = NavCommands.About
     }
 
-    init {
-        currentScreen.value = NavCommands.PictureOfTheDay
+    fun toGallery() {
+        currentScreen.value = NavCommands.ImageGallery
     }
+
+
+
 }

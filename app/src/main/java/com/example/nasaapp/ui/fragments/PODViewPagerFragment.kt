@@ -9,12 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.nasaapp.R
 import com.example.nasaapp.databinding.ViewPagerPodLayoutBinding
 import com.example.nasaapp.model.PictureOfTheDayData
+import com.example.nasaapp.model.navigation.NavCommands
 import com.example.nasaapp.ui.adapters.SimpleTabSPAdapter
 import com.example.nasaapp.ui.viewmodel.PODViewPagerViewModel
 import com.google.android.material.tabs.TabLayout
@@ -24,6 +27,7 @@ class PODViewPagerFragment(val counter: Int = 5) : Fragment(), IBackPressableFra
     private var vb: ViewPagerPodLayoutBinding? = null
     private var podTabFSAdapter: SimpleTabSPAdapter? = null
     private var tabLayoutMediator: TabLayoutMediator? = null
+
 
     private val viewModel: PODViewPagerViewModel by lazy {
         ViewModelProviders.of(this).get(
@@ -47,7 +51,6 @@ class PODViewPagerFragment(val counter: Int = 5) : Fragment(), IBackPressableFra
         initViewPager()
         initAppBar()
         initWikiSearch()
-
     }
 
     override fun onDestroy() {
@@ -59,8 +62,8 @@ class PODViewPagerFragment(val counter: Int = 5) : Fragment(), IBackPressableFra
         podTabFSAdapter = SimpleTabSPAdapter(this, counter)
         tabLayoutMediator?.detach()
         vb?.apply {
-            pager?.adapter = podTabFSAdapter
-            tabLayoutMediator = TabLayoutMediator(tabLayout, pager, true ) { tab, position -> }
+            pager.adapter = podTabFSAdapter
+            tabLayoutMediator = TabLayoutMediator(tabLayout, pager, true) { _, _ -> }
             tabLayoutMediator?.attach()
         }
     }
@@ -150,4 +153,6 @@ class PODViewPagerFragment(val counter: Int = 5) : Fragment(), IBackPressableFra
     override fun backPressed(): Boolean {
         return viewModel.onBackPressed()
     }
+
+
 }

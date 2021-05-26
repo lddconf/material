@@ -14,6 +14,15 @@
         <action
             android:id="@+id/action_pod_settings"
             app:destination="@id/settings_fragment" />
+
+        <action
+            android:id="@+id/action_pod_to_gallery_fragment"
+            app:destination="@id/gallery_fragment" />
+
+        <action
+            android:id="@+id/action_pod_to_about_fragment"
+            app:destination="@id/about_fragment"
+        />
     </fragment>
     <fragment
         android:id="@+id/settings_fragment"
@@ -24,5 +33,36 @@
         <action
             android:id="@+id/action_settings_to_pod_fragment"
             app:destination="@id/pod_view_pager_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/gallery_fragment"
+        android:name="com.example.nasaapp.ui.fragments.ImageGalleryFragment"
+        android:label="Image gallery"
+        tools:layout="@layout/image_gallery_fragment">
+
+        <action
+            android:id="@+id/action_gallery_to_pod_fragment"
+            app:destination="@id/pod_view_pager_fragment" />
+
+        <action
+            android:id="@+id/action_gallery_to_about_fragment"
+            app:destination="@id/about_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/about_fragment"
+        android:name="com.example.nasaapp.ui.fragments.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/about_fragment">
+        <action
+            android:id="@+id/action_about_to_pod_fragment"
+            app:destination="@id/pod_view_pager_fragment" />
+
+        <action
+            android:id="@+id/action_about_to_image_gallery_fragment"
+            app:destination="@id/gallery_fragment" />
     </fragment>
 </navigation>

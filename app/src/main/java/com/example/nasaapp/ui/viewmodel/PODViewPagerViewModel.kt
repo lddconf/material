@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.nasaapp.BuildConfig
 import com.example.nasaapp.model.PictureOfTheDayData
 import com.example.nasaapp.model.PictureOfTheDayResponseData
+import com.example.nasaapp.model.navigation.NavCommands
 import com.example.nasaapp.model.retrofit.IRetrofitPictureOfTheDay
 import com.example.nasaapp.model.retrofit.RetrofitImp
 import retrofit2.Call
@@ -16,8 +17,6 @@ import retrofit2.Response
 class PODViewPagerViewModel() : ViewModel(), IBackPressedVModel {
     private val liveData: MutableLiveData<PictureOfTheDayData> = MutableLiveData()
     private val isSearchMode: MutableLiveData<Boolean> = MutableLiveData()
-
-    private val retrofitImp: IRetrofitPictureOfTheDay = RetrofitImp()
 
     fun getData(): LiveData<PictureOfTheDayData> {
         return liveData
@@ -54,9 +53,8 @@ class PODViewPagerViewModel() : ViewModel(), IBackPressedVModel {
 
     init {
         isSearchMode.value = false
+        //currentScreen.value = NavCommands.PictureOfTheDay
     }
-
-
 
 //    inner class BottomNavigationBehavior : CoordinatorLayout.Behavior<BottomNavigationView>() {
 //        override fun layoutDependsOn(

@@ -4,6 +4,7 @@ sealed class NavCommands {
     //On back pressed command
     object OnBackCommand : NavCommands()
     object PictureOfTheDay : NavCommands()
-    object News : NavCommands()
+    object About : NavCommands()
+    object ImageGallery : NavCommands()
 }
 

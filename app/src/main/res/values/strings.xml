@@ -19,4 +19,8 @@
     <string name="news_bnd_label">News</string>
     <string name="pod_view_pager_fragment_label">Picture of the day</string>
     <string name="settings_fragment_label">Settings</string>
+    <string name="image_gallery_fragment_label">Image gallery fragment</string>
+    <string name="image_gallery_bnv">Gallery</string>
+    <string name="about_bnv">About</string>
+    <string name="about_app_text">Simple NasaApp. 2021</string>
 </resources>
