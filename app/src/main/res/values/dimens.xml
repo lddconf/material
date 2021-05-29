@@ -1,4 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="pod_toolbar_height">32</dimen>
+    <dimen name="toolbar_app_title">17sp</dimen>
 </resources>

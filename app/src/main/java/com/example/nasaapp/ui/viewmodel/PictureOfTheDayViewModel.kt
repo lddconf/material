@@ -34,6 +34,10 @@ class PictureOfTheDayViewModel() : ViewModel() {
         isSearchMode.value = false
     }
 
+    fun appSettingsRequested() {
+        liveData.value = PictureOfTheDayData.Settings
+    }
+
     fun performWikiSearch(word : String) {
         disableWikiSearchMode()
         liveData.value = PictureOfTheDayData.WikiSearch(word)

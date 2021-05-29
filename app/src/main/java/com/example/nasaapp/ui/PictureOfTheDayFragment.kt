@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.example.nasaapp.R
 import com.example.nasaapp.databinding.PictureOfTheDayFragmentBinding
 import com.example.nasaapp.model.PictureOfTheDayData
@@ -40,7 +41,7 @@ class PictureOfTheDayFragment : Fragment() {
                     true
                 }
                 R.id.action_settings -> {
-                    showMessage("Settings")
+                    viewModel.appSettingsRequested()
                     true
                 }
                 else -> false
@@ -150,6 +151,9 @@ class PictureOfTheDayFragment : Fragment() {
             }
             is PictureOfTheDayData.WikiSearch -> {
                 startWikiSearch(pod.url)
+            }
+            is PictureOfTheDayData.Settings -> {
+                findNavController().navigate(R.id.action_pod_settings)
             }
         }
     }
