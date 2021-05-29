@@ -4,7 +4,4 @@ import com.example.nasaapp.model.api.IPictureOfTheDaySource
 
 interface IRetrofitPictureOfTheDay {
     fun retrofitImpl(): IPictureOfTheDaySource
-
-
-
 }

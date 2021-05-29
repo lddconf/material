@@ -2,56 +2,93 @@ package com.example.nasaapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.example.nasaapp.R
-import com.example.nasaapp.model.IThemeProvider
-import com.example.nasaapp.model.ThemeHolder
+import com.example.nasaapp.databinding.ActivityMainBinding
+import com.example.nasaapp.model.navigation.NavCommands
+import com.example.nasaapp.ui.fragments.IBackPressableFragment
+import com.example.nasaapp.ui.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
+    private var vb : ActivityMainBinding? = null
+    private val navHostFragment by lazy {
+        supportFragmentManager.fragments.first() as? NavHostFragment
+    }
+    private val viewModel by lazy {
+        ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        vb = ActivityMainBinding.inflate(layoutInflater)
         setTheme(App.themeProvider.getCurrentThemeResourceID())
-        setContentView(R.layout.activity_main)
+        setContentView(vb?.root)
+        viewModelNavigationSetup()
+        initBottomNavigation()
     }
 
+    private fun initBottomNavigation() {
+        vb?.bottomNavigation?.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.page_pod -> {
+                    viewModel.toPOD()
+                    true
+                }
+                R.id.page_gallery -> {
+                    viewModel.toGallery()
+                    true
+                }
+                R.id.about_fragment -> {
+                    viewModel.toAbout()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
 
-//    override fun getCurrentThemeResourceID(): Int {
-//        val sharedPref = getSharedPreferences(sharedPrefSettingsKey, MODE_PRIVATE)
-//        sharedPref?.let {
-//            if ( it.getInt(themeIdSettings, defaultThemeId.id) > 0 ) {
-//                //ThemeHolder.NasaAppThemes.LightTheme
-//                return R.style.Theme_NasaApp_NasaAppStrange_NoActionBar
-//            } else {
-//                return R.style.Theme_NasaApp_NoActionBar
-//            }
-//        }
-//        return R.style.Theme_NasaApp_NasaAppStrange_NoActionBar
-//    }
-//
-//    override fun getCurrentTheme(): ThemeHolder.NasaAppThemes {
-//        val sharedPref = getSharedPreferences(sharedPrefSettingsKey, MODE_PRIVATE)
-//        sharedPref?.let {
-//            if ( it.getInt(themeIdSettings, defaultThemeId.id) > 0 ) {
-//                return ThemeHolder.NasaAppThemes.LightTheme
-//            } else {
-//                return ThemeHolder.NasaAppThemes.BlackTheme
-//            }
-//        }
-//        return ThemeHolder.NasaAppThemes.LightTheme
-//    }
-//
-//    override fun setCurrentTheme(themeHolder: ThemeHolder.NasaAppThemes) {
-//        val sharedPref = getSharedPreferences(sharedPrefSettingsKey, MODE_PRIVATE) ?: return
-//        with(sharedPref.edit()) {
-//            putInt(themeIdSettings, themeHolder.id )
-//            apply()
-//        }
-//        this.recreate()
-//    }
-//
-//    companion object {
-//        private const val sharedPrefSettingsKey = "com.example.nasaapp.ui.settings"
-//        private const val themeIdSettings = "themeId"
-//        private val defaultThemeId = ThemeHolder.NasaAppThemes.LightTheme
-//    }
+    private fun viewModelNavigationSetup() {
+        viewModel.getScreens().observe(this, Observer { navCommands ->
+            when (navCommands) {
+                is NavCommands.PictureOfTheDay -> {
+                    navHostFragment?.findNavController()?.navigate(R.id.pod_view_pager_fragment)
+                    if ( vb?.bottomNavigation?.selectedItemId != R.id.page_pod ) {
+                        vb?.bottomNavigation?.selectedItemId = R.id.page_pod
+                    }
+
+                }
+                is NavCommands.ImageGallery -> {
+                    navHostFragment?.findNavController()?.navigate(R.id.gallery_fragment)
+                    if ( vb?.bottomNavigation?.selectedItemId != R.id.gallery_fragment ) {
+                        vb?.bottomNavigation?.selectedItemId = R.id.gallery_fragment
+                    }
+                }
+                is NavCommands.About -> {
+                    navHostFragment?.findNavController()?.navigate(R.id.about_fragment)
+                    if ( vb?.bottomNavigation?.selectedItemId != R.id.gallery_fragment ) {
+                        vb?.bottomNavigation?.selectedItemId = R.id.gallery_fragment
+                    }
+                }
+            }
+        })
+    }
+
+    override fun onBackPressed() {
+        navHostFragment?.childFragmentManager?.fragments?.forEach { fragment ->
+            if (fragment is IBackPressableFragment) {
+                if (fragment.backPressed()) {
+                    return
+                }
+            }
+        }
+        this.finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        vb = null
+    }
 }

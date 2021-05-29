@@ -1,7 +1,8 @@
-package com.example.nasaapp.ui
+package com.example.nasaapp.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -10,16 +11,16 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.nasaapp.R
 import com.example.nasaapp.databinding.FragmentSettingsBinding
-import com.example.nasaapp.model.IThemeProvider
 import com.example.nasaapp.model.ThemeHolder
 import com.example.nasaapp.model.navigation.NavCommands
+import com.example.nasaapp.ui.App
 import com.example.nasaapp.ui.viewmodel.SettingsViewModel
 
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(), IBackPressableFragment {
     private var vb: FragmentSettingsBinding? = null
     private val navController by lazy { findNavController() }
     private val viewModel: SettingsViewModel by lazy {
@@ -97,7 +98,11 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    override fun backPressed(): Boolean {
+        return viewModel.onBackPressed()
+    }
+
     private fun onBackPressed() {
-        navController.popBackStack()
+        navController.navigate(R.id.pod_view_pager_fragment)
     }
 }

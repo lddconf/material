@@ -1,12 +1,11 @@
 package com.example.nasaapp.ui.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.*
 import com.example.nasaapp.model.IThemeProvider
 import com.example.nasaapp.model.ThemeHolder
 import com.example.nasaapp.model.navigation.NavCommands
 
-class SettingsViewModel(private val themeProvider: IThemeProvider?) : ViewModel() {
+class SettingsViewModel(private val themeProvider: IThemeProvider?) : ViewModel(), IBackPressedVModel {
     private val liveData: MutableLiveData<ThemeHolder> = MutableLiveData()
     private val navCommands: MutableLiveData<NavCommands> = MutableLiveData()
 
@@ -22,13 +21,11 @@ class SettingsViewModel(private val themeProvider: IThemeProvider?) : ViewModel(
         return false
     }
 
-    fun applyTheme() {
-        navCommands.value = NavCommands.RecreateActivity
-    }
-
     fun navCommandsLD(): LiveData<NavCommands> = navCommands
-    fun onBackPressed() {
+
+    override fun onBackPressed() : Boolean {
         navCommands.value = NavCommands.OnBackCommand
+        return true
     }
 
     private class SettingsViewModelFactory(val themeProvider: IThemeProvider?) : ViewModelProvider.Factory {
