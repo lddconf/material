@@ -21,7 +21,8 @@ class SettingsViewModel(private val themeProvider: IThemeProvider?) : ViewModel(
         return false
     }
 
-    fun navCommandsLD(): LiveData<NavCommands> = navCommands
+    fun navCommandsLD(): LiveData<NavCommands>
+        = navCommands
 
     override fun onBackPressed() : Boolean {
         navCommands.value = NavCommands.OnBackCommand
