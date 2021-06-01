@@ -20,10 +20,12 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="?attr/toolbarStyle">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.constraintlayout.motion.widget.MotionLayout
+                android:id="@+id/appbar_motion_transition"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layoutDescription="@xml/view_pager_pod_layout_appbar_scene">
 
                 <TextView
                     android:id="@+id/appbar_title"
@@ -33,10 +35,10 @@
                     android:gravity="center_vertical"
                     android:text="@string/app_name"
                     android:textSize="@dimen/toolbar_app_title"
-                    android:visibility="visible"
                     app:layout_constraintStart_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="visible"
+                />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/input_text_layout"
@@ -44,7 +46,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/search_wiki"
-                    android:visibility="gone"
                     app:counterEnabled="true"
                     app:counterMaxLength="20"
                     app:endIconCheckable="true"
@@ -52,8 +53,7 @@
                     app:endIconMode="custom"
                     app:helperText="@string/wiki_helper_text"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="gone"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -62,7 +62,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.motion.widget.MotionLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

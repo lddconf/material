@@ -9,18 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.nasaapp.R
 import com.example.nasaapp.databinding.ViewPagerPodLayoutBinding
 import com.example.nasaapp.model.PictureOfTheDayData
-import com.example.nasaapp.model.navigation.NavCommands
 import com.example.nasaapp.ui.adapters.SimpleTabSPAdapter
 import com.example.nasaapp.ui.viewmodel.PODViewPagerViewModel
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class PODViewPagerFragment(val counter: Int = 5) : Fragment(), IBackPressableFragment {
@@ -104,9 +100,9 @@ class PODViewPagerFragment(val counter: Int = 5) : Fragment(), IBackPressableFra
         viewModel.getWikiSearchMode()
             .observe(viewLifecycleOwner, Observer<Boolean> { isWikiSearchMode ->
                 if (isWikiSearchMode.not()) {
-                    showWikiSearch()
-                } else {
                     hideWikiSearch()
+                } else {
+                    showWikiSearch()
                 }
             })
 
@@ -139,15 +135,17 @@ class PODViewPagerFragment(val counter: Int = 5) : Fragment(), IBackPressableFra
     }
 
     private fun showWikiSearch() {
-        vb?.appbarTitle?.visibility = View.VISIBLE
-        vb?.inputTextLayout?.visibility = View.GONE
-        vb?.inputEditText?.text?.clear()
+        vb?.appbarMotionTransition?.transitionToState(R.id.appbar_show_wiki_search)
+//        vb?.appbarTitle?.visibility = View.VISIBLE
+//        vb?.inputTextLayout?.visibility = View.GONE
+//        vb?.inputEditText?.text?.clear()
 //        vb?.inputEditText?.requestFocus()
     }
 
     private fun hideWikiSearch() {
-        vb?.appbarTitle?.visibility = View.GONE
-        vb?.inputTextLayout?.visibility = View.VISIBLE
+        vb?.appbarMotionTransition?.transitionToState(R.id.appbar_show_title)
+//        vb?.appbarTitle?.visibility = View.GONE
+//        vb?.inputTextLayout?.visibility = View.VISIBLE
     }
 
     override fun backPressed(): Boolean {
