@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        vb = ActivityMainBinding.inflate(layoutInflater)
         setTheme(App.themeProvider.getCurrentThemeResourceID())
+        vb = ActivityMainBinding.inflate(layoutInflater)
         setContentView(vb?.root)
         viewModelNavigationSetup()
         initBottomNavigation()
