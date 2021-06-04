@@ -24,4 +24,5 @@
     <string name="about_bnv">About</string>
     <string name="about_app_text">Simple NasaApp. 2021</string>
     <string name="about_text_author">By unknown author</string>
+    <string name="notes_bnd_label">Notes</string>
 </resources>

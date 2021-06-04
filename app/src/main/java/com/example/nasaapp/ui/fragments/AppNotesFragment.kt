@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import com.example.nasaapp.R
 import com.example.nasaapp.ui.viewmodel.ImageGalleryViewModel
 
-class ImageGalleryFragment : Fragment() {
+class AppNotesFragment : Fragment() {
     companion object {
-        fun newInstance() = ImageGalleryFragment()
+        fun newInstance() = AppNotesFragment()
     }
 
     private lateinit var viewModel: ImageGalleryViewModel
@@ -20,7 +20,7 @@ class ImageGalleryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.image_gallery_fragment, container, false)
+        return inflater.inflate(R.layout.app_notes_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
