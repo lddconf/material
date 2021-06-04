@@ -21,6 +21,7 @@ import com.example.nasaapp.databinding.ActivityNoteViewBinding
 import com.example.nasaapp.model.data.INotesRepo
 import com.example.nasaapp.model.data.NasaAppNote
 import com.example.nasaapp.model.data.SimpleNotesRepo
+import com.example.nasaapp.ui.App
 import com.example.nasaapp.ui.utils.toColorResId
 import com.example.nasaapp.ui.viewmodel.NasaAppNoteViewModel
 import com.example.nasaapp.ui.dialogs.ColorSelectionDialog
@@ -70,19 +71,20 @@ class NasaAppNoteViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setTheme(App.themeProvider.getCurrentThemeResourceID())
+        setContentView(ui?.root)
         setupActionBar()
         val uid = intent.getStringExtra(EXTRA_NOTE)
 
-        viewModel.viewState().observe(this, Observer<NasaAppNote?> { note->
-            renderData(note)
-        })
 
         uid?.let { id ->
             viewModel.loadNote(id)
         }
         addOnTextChangedListener()
 
+        viewModel.viewState().observe(this, Observer<NasaAppNote?> { note->
+            renderData(note)
+        })
 
     }
 

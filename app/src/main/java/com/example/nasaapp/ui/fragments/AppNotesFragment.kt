@@ -62,12 +62,11 @@ class AppNotesFragment : Fragment() {
         viewModel.viewState().observe(viewLifecycleOwner, Observer<List<NasaAppNote>> {
             updateNoteList(it)
         })
-        viewModel.loadNotes()
     }
 
     private fun initAppBar() {
         setHasOptionsMenu(true)
-        vb?.toolbar?.inflateMenu(R.menu.picture_of_the_day_menu)
+        vb?.toolbar?.inflateMenu(R.menu.notes_list_menu)
         vb?.toolbar?.setOnMenuItemClickListener {
             when (it.itemId) {
 //                android.R.id.home->
@@ -134,7 +133,7 @@ class AppNotesFragment : Fragment() {
 
     private fun updateNoteList(notes: List<NasaAppNote>?) {
         notes?.apply {
-            adapter.notes = this
+            adapter.setNotes(this)
         }
     }
 }

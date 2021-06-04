@@ -16,6 +16,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/note_toolbar"
+            android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary" />
@@ -52,8 +53,8 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.example.nasaapp.ui.customviews.CircleColorPicker
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:colors="@array/predefined_colors" />
+<!--    <com.example.nasaapp.ui.customviews.CircleColorPicker-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:colors="@array/predefined_colors" />-->
 </LinearLayout>

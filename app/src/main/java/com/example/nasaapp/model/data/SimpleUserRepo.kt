@@ -1,11 +1,13 @@
 package com.example.nasaapp.model.data
 
-import android.graphics.Color
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 object SimpleNotesRepo : INotesRepo {
     private val notes = mutableListOf<NasaAppNote>()
+    private val liveData = MutableLiveData<NoteResult>()
 
-    override fun getNotes(): List<NasaAppNote> = notes
+    override fun getNotesSubscription(): LiveData<NoteResult> = liveData
 
     override fun saveNote(note: NasaAppNote) {
         val index = notes.indexOf(note)
@@ -15,6 +17,7 @@ object SimpleNotesRepo : INotesRepo {
             notes.removeAt(index)
             notes.add(index, note)
         }
+        liveData.value = NoteResult.Success(notes)
     }
 
     override fun deleteNote(uid: String): Boolean {
@@ -23,6 +26,7 @@ object SimpleNotesRepo : INotesRepo {
         }
         note?.let {
             notes.remove(note)
+            liveData.value = NoteResult.Success(notes)
             return true
         }
         return false
@@ -42,6 +46,7 @@ object SimpleNotesRepo : INotesRepo {
                 )
             )
         }
+        liveData.value = NoteResult.Success(notes)
     }
 
     init {

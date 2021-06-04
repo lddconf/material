@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nasaapp.R
@@ -25,11 +26,11 @@ class NotesRVAdapter(
     var onItemActionListener: OnItemActionListener? = null
 ) : RecyclerView.Adapter<NotesRVAdapter.NoteRVHolder>() {
 
-    var notes: List<NasaAppNote> = listOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    private val notes: MutableList<NasaAppNote> = mutableListOf()
+//        set(value) {
+//            field = value
+//            notifyDataSetChanged()
+//        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteRVHolder {
         return NoteRVHolder(
@@ -42,6 +43,13 @@ class NotesRVAdapter(
     }
 
     override fun getItemCount(): Int = notes.size
+
+    fun setNotes( newNotes : List<NasaAppNote> ) {
+        val result = DiffUtil.calculateDiff(DiffUtilCallback(notes, newNotes))
+        result.dispatchUpdatesTo(this)
+        notes.clear()
+        notes.addAll(newNotes)
+    }
 
     inner class NoteRVHolder(val ui: NotePreviewLayoutBinding) : RecyclerView.ViewHolder(ui.root) {
         fun bind(note: NasaAppNote) = with(ui) {
@@ -122,5 +130,23 @@ class NotesRVAdapter(
                 onItemDelete(notes[position])
             }
         }
+    }
+
+    inner class DiffUtilCallback(
+        private var oldItems: List<NasaAppNote>,
+        private var newItems: List<NasaAppNote>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldItems.size
+
+        override fun getNewListSize(): Int = newItems.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldItems[oldItemPosition].uid == newItems[newItemPosition].uid
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            ( oldItems[oldItemPosition].text == newItems[newItemPosition].text ) &&
+            ( oldItems[oldItemPosition].title == newItems[newItemPosition].title ) &&
+            ( oldItems[oldItemPosition].color == newItems[newItemPosition].color )
     }
 }
