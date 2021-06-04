@@ -5,6 +5,6 @@ sealed class NavCommands {
     object OnBackCommand : NavCommands()
     object PictureOfTheDay : NavCommands()
     object About : NavCommands()
-    object ImageGallery : NavCommands()
+    object Notes : NavCommands()
 }
 
