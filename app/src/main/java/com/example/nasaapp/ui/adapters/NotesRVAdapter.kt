@@ -44,12 +44,20 @@ class NotesRVAdapter(
 
     override fun getItemCount(): Int = notes.size
 
-    fun setNotes( newNotes : List<NasaAppNote> ) {
+    fun setNotes(newNotes: List<NasaAppNote>) {
         val result = DiffUtil.calculateDiff(DiffUtilCallback(notes, newNotes))
         result.dispatchUpdatesTo(this)
         notes.clear()
         notes.addAll(newNotes)
     }
+
+    fun onItemMove(fromPosition: Int, toPosition: Int) {
+        notes.removeAt(fromPosition).apply {
+            notes.add(if (toPosition > fromPosition) toPosition - 1 else toPosition, this)
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
 
     inner class NoteRVHolder(val ui: NotePreviewLayoutBinding) : RecyclerView.ViewHolder(ui.root) {
         fun bind(note: NasaAppNote) = with(ui) {
@@ -81,6 +89,26 @@ class NotesRVAdapter(
         ItemTouchHelper.LEFT
     ) {
         private val background = ColorDrawable(Color.RED);
+
+        override fun isLongPressDragEnabled(): Boolean {
+            return true
+        }
+
+        override fun isItemViewSwipeEnabled(): Boolean {
+            return true
+        }
+
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
+            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+            return makeMovementFlags(
+                dragFlags,
+                swipeFlags
+            )
+        }
 
         override fun onChildDraw(
             c: Canvas,
@@ -120,7 +148,8 @@ class NotesRVAdapter(
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
-            return false
+            adapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+            return true
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -145,8 +174,10 @@ class NotesRVAdapter(
             oldItems[oldItemPosition].uid == newItems[newItemPosition].uid
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            ( oldItems[oldItemPosition].text == newItems[newItemPosition].text ) &&
-            ( oldItems[oldItemPosition].title == newItems[newItemPosition].title ) &&
-            ( oldItems[oldItemPosition].color == newItems[newItemPosition].color )
+            (oldItems[oldItemPosition].color == newItems[newItemPosition].color) &&
+                    (oldItems[oldItemPosition].title == newItems[newItemPosition].title) &&
+                    (oldItems[oldItemPosition].text == newItems[newItemPosition].text) &&
+                    (oldItems[oldItemPosition].lastChanged == newItems[newItemPosition].lastChanged)
+
     }
 }
