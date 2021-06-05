@@ -38,9 +38,9 @@
 
     <fragment
         android:id="@+id/gallery_fragment"
-        android:name="com.example.nasaapp.ui.fragments.ImageGalleryFragment"
+        android:name="com.example.nasaapp.ui.fragments.AppNotesFragment"
         android:label="Image gallery"
-        tools:layout="@layout/image_gallery_fragment">
+        tools:layout="@layout/app_notes_fragment">
 
         <action
             android:id="@+id/action_gallery_to_pod_fragment"

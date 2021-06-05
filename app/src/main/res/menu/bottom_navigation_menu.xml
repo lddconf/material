@@ -8,8 +8,8 @@
     <item
         android:id="@+id/page_gallery"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_image_search_24"
-        android:title="@string/image_gallery_bnv" />
+        android:icon="@drawable/ic_baseline_notes_24"
+        android:title="@string/notes_bnd_label" />
     <item
         android:id="@+id/about_fragment"
         android:enabled="true"

@@ -17,8 +17,8 @@ class MainActivityViewModel : ViewModel() {
         currentScreen.value = NavCommands.About
     }
 
-    fun toGallery() {
-        currentScreen.value = NavCommands.ImageGallery
+    fun toNotes() {
+        currentScreen.value = NavCommands.Notes
     }
 
 

@@ -30,4 +30,13 @@
     <color name="limeSecondaryText">#757575</color>
     <color name="limeAccentColor">#E040FB</color>
 
+
+    <color name="note_white">#FAF1CE</color>
+    <color name="red">#B82525</color>
+    <color name="orange">#FF5722</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="green">#8BC34A</color>
+    <color name="blue">#03A9F4</color>
+    <color name="dark_blue">#3F51B5</color>
+    <color name="violet">#673AB7</color>
 </resources>

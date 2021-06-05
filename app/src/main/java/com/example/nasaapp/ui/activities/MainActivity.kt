@@ -1,4 +1,4 @@
-package com.example.nasaapp.ui
+package com.example.nasaapp.ui.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.nasaapp.R
 import com.example.nasaapp.databinding.ActivityMainBinding
 import com.example.nasaapp.model.navigation.NavCommands
+import com.example.nasaapp.ui.App
 import com.example.nasaapp.ui.fragments.IBackPressableFragment
 import com.example.nasaapp.ui.viewmodel.MainActivityViewModel
 
@@ -23,8 +24,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        vb = ActivityMainBinding.inflate(layoutInflater)
         setTheme(App.themeProvider.getCurrentThemeResourceID())
+        vb = ActivityMainBinding.inflate(layoutInflater)
         setContentView(vb?.root)
         viewModelNavigationSetup()
         initBottomNavigation()
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.page_gallery -> {
-                    viewModel.toGallery()
+                    viewModel.toNotes()
                     true
                 }
                 R.id.about_fragment -> {
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 }
-                is NavCommands.ImageGallery -> {
+                is NavCommands.Notes -> {
                     navHostFragment?.findNavController()?.navigate(R.id.gallery_fragment)
                     if ( vb?.bottomNavigation?.selectedItemId != R.id.gallery_fragment ) {
                         vb?.bottomNavigation?.selectedItemId = R.id.gallery_fragment

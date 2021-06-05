@@ -6,4 +6,5 @@
     <dimen name="pod_bsheet_hdr_margin_start_end">5dp</dimen>
     <dimen name="tab_layout_height">20dp</dimen>
     <dimen name="tab_layout_margin_top">5dp</dimen>
+    <dimen name="note_preview_margin">4dp</dimen>
 </resources>
