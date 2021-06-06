@@ -8,18 +8,16 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:visibility="visible"
-        />
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
         <Constraint
             android:id="@+id/input_text_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:visibility="gone"
-        />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/appbar_show_wiki_search">
@@ -28,23 +26,20 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="100dp"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:visibility="gone"
-            />
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
         <Constraint
             android:id="@+id/input_text_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:visibility="visible"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
 
     <Transition
-        app:constraintSetStart="@+id/appbar_show_title"
         app:constraintSetEnd="@+id/appbar_show_wiki_search"
-        app:duration="500"
-        />
+        app:constraintSetStart="@+id/appbar_show_title"
+        app:duration="500" />
 </MotionScene>

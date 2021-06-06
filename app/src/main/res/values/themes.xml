@@ -91,4 +91,32 @@
         <item name="colorPrimary">?attr/colorSecondaryVariant</item>
     </style>
 
+    <style name="NoteBriefHeader">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_margin">6dp</item>
+    </style>
+
+    <style name="NoteBriefText">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_margin">6dp</item>
+    </style>
+
+    <style name="SplashImage">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">200dp</item>
+        <item name="android:src">@drawable/ic_nasa_logo</item>
+    </style>
+
+    <style name="SplashButton">
+        <item name="backgroundTint">?attr/colorSecondary</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:text">@string/splash_continue_btn_label</item>
+    </style>
+
 </resources>
