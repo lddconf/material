@@ -14,11 +14,6 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="ThemeOverlay.NasaApp.FullscreenContainer" parent="">
-        <item name="fullscreenBackgroundColor">@color/light_blue_900</item>
-        <item name="fullscreenTextColor">@color/light_blue_A400</item>
-    </style>
-
     <style name="SplashTheme" parent="">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
