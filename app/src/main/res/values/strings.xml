@@ -46,4 +46,9 @@
     <string name="add_new_note">Add note</string>
     <string name="action_recover_deleted_note">Dou you want to recover deleted note?</string>
     <string name="snckbar_recover_btn">Recover</string>
+    <string name="title_activity_splash">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="splash_continue_btn_label">Continue</string>
+    <string name="nasa_logo_description">Nasa logo</string>
 </resources>

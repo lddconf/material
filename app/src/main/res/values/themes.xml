@@ -14,7 +14,7 @@
         <item name="colorSecondaryVariant">@color/purple_A400</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-<!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
+        <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
 
         <!-- Customize your theme here. -->
         <item name="android:textColorPrimary">?attr/colorOnSurface</item>
@@ -37,7 +37,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="DotsStyle" parent="@style/Widget.AppCompat.ActionButton.Overflow" >
+    <style name="DotsStyle" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">?attr/colorOnPrimary</item>
     </style>
 
@@ -46,7 +46,7 @@
         <item name="popupMenuBackground">?attr/colorPrimaryVariant</item>
         <item name="actionOverflowButtonStyle">@style/DotsStyle</item>
         <item name="titleTextAppearance">@style/Toolbar.TitleText</item>
-     </style>
+    </style>
 
     <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="counterTextColor">@color/text_input_layout_helper_color</item>
@@ -102,4 +102,21 @@
         <item name="android:textAlignment">center</item>
         <item name="android:layout_margin">6dp</item>
     </style>
+
+    <style name="SplashImage">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">200dp</item>
+        <item name="android:src">@drawable/ic_nasa_logo</item>
+    </style>
+
+    <style name="SplashButton">
+        <item name="backgroundTint">?attr/colorSecondary</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:text">@string/splash_continue_btn_label</item>
+    </style>
+
 </resources>
