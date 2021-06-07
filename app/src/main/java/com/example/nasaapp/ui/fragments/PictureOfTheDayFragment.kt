@@ -17,9 +17,11 @@ import coil.api.load
 import com.example.nasaapp.R
 import com.example.nasaapp.databinding.PictureOfTheDayFragmentBinding
 import com.example.nasaapp.model.PictureOfTheDayData
+import com.example.nasaapp.ui.App
 import com.example.nasaapp.ui.util.getColorFromAttr
 import com.example.nasaapp.ui.viewmodel.PictureOfTheDayViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -103,8 +105,9 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
 
 
                             bottomSheetPodDescriptionHeader.text = spannableTitle
-                            bottomSheetPodDescription.text =
-                                pod.ofTheDayResponseData.explanation
+                            bottomSheetPodDescription.text = pod.ofTheDayResponseData.explanation
+//                                prepareStyledImageDescription(pod.ofTheDayResponseData.explanation?: "")
+
 
                             val spannableTimestamp = SpannableString(pod.ofTheDayResponseData.date)
                             spannableTimestamp.setSpan(
@@ -133,6 +136,46 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
                 //Load Data
             }
         }
+    }
+
+    private fun prepareStyledImageDescription(text : String) : CharSequence {
+
+        val regexMaskBuilder = StringBuilder()
+
+        App.wordsDictionary.keyWords().forEach{ keyword->
+            if ( keyword.isNotEmpty() ) {
+                val word = if ( regexMaskBuilder.length > 0 ) "${keyword.toLowerCase()}|"
+                else "\\s($keyword|"
+                regexMaskBuilder.append(word)
+            }
+        }
+        if (regexMaskBuilder.isNotEmpty()) {
+            regexMaskBuilder.replace(regexMaskBuilder.length-1, regexMaskBuilder.length, ")")
+            regexMaskBuilder.append("\\s")
+        }
+
+        val regex = Regex(regexMaskBuilder.toString(), RegexOption.IGNORE_CASE)
+        val matches = regex.find(text)
+
+        val spannableResult = SpannableString(text)
+
+        var match = matches
+        var range : IntRange? = null
+
+        while (match != null) {
+            range = match?.groups[1]?.range
+            range?.let {
+                spannableResult.setSpan(
+                    UnderlineSpan(),
+                    range.start,
+                    range.last+1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+
+            match = matches?.next()
+        }
+        return spannableResult
     }
 
     private fun loadImage(url: String) {
