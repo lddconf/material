@@ -58,7 +58,10 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
 
             //Install fronts
             vb?.bottomSheetPodDetails?.bottomSheetPodDescriptionHeader?.typeface =
-                Typeface.createFromAsset(requireActivity().assets, "font/dancing_script_variable_font_wght.ttf")
+                Typeface.createFromAsset(
+                    requireActivity().assets,
+                    "font/dancing_script_variable_font_wght.ttf"
+                )
         }
     }
 
@@ -105,8 +108,10 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
 
 
                             bottomSheetPodDescriptionHeader.text = spannableTitle
-                            bottomSheetPodDescription.text = pod.ofTheDayResponseData.explanation
-//                                prepareStyledImageDescription(pod.ofTheDayResponseData.explanation?: "")
+                            bottomSheetPodDescription.text = makeDictionaryStyledImageDescription(
+                                pod.ofTheDayResponseData.explanation
+                            )
+//                                pod.ofTheDayResponseData.explanation
 
 
                             val spannableTimestamp = SpannableString(pod.ofTheDayResponseData.date)
@@ -138,19 +143,22 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
         }
     }
 
-    private fun prepareStyledImageDescription(text : String) : CharSequence {
+    private fun makeDictionaryStyledImageDescription(text: String?): CharSequence? {
 
+        if (text.isNullOrEmpty()) {
+            return null
+        }
         val regexMaskBuilder = StringBuilder()
 
-        App.wordsDictionary.keyWords().forEach{ keyword->
-            if ( keyword.isNotEmpty() ) {
-                val word = if ( regexMaskBuilder.length > 0 ) "${keyword.toLowerCase()}|"
+        App.wordsDictionary.keyWords().forEach { keyword ->
+            if (keyword.isNotEmpty()) {
+                val word = if (regexMaskBuilder.length > 0) "${keyword.toLowerCase()}|"
                 else "\\s($keyword|"
                 regexMaskBuilder.append(word)
             }
         }
         if (regexMaskBuilder.isNotEmpty()) {
-            regexMaskBuilder.replace(regexMaskBuilder.length-1, regexMaskBuilder.length, ")")
+            regexMaskBuilder.replace(regexMaskBuilder.length - 1, regexMaskBuilder.length, ")")
             regexMaskBuilder.append("\\s")
         }
 
@@ -160,20 +168,27 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
         val spannableResult = SpannableString(text)
 
         var match = matches
-        var range : IntRange? = null
+        var range: IntRange? = null
 
         while (match != null) {
-            range = match?.groups[1]?.range
-            range?.let {
+            range = match.range
+            range.let {
                 spannableResult.setSpan(
                     UnderlineSpan(),
-                    range.start,
-                    range.last+1,
+                    range.start + 1,
+                    range.last,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
+                spannableResult.setSpan(
+                    ForegroundColorSpan(
+                        requireContext().getColorFromAttr(R.attr.colorSecondary)
+                    ),
+                    range.start + 1,
+                    range.last,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
-
-            match = matches?.next()
+            match = match.next()
         }
         return spannableResult
     }
