@@ -1,5 +1,6 @@
 package com.example.nasaapp.ui.fragments
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -52,6 +53,10 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 }
             })
+
+            //Install fronts
+            vb?.bottomSheetPodDetails?.bottomSheetPodDescriptionHeader?.typeface =
+                Typeface.createFromAsset(requireActivity().assets, "font/dancing_script_variable_font_wght.ttf")
         }
     }
 
@@ -62,7 +67,6 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
         })
         initBottomSheet()
     }
-
 
 
     private fun renderData(pod: PictureOfTheDayData) {
