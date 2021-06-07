@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.nasaapp.databinding.ActivitySplashBinding
 import com.example.nasaapp.ui.App
+import com.example.nasaapp.ui.activities.MainActivity
 import com.example.nasaapp.ui.viewmodel.*
 
 
