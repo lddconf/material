@@ -1,26 +1,27 @@
 package com.example.nasaapp.ui.fragments
 
-import android.content.Intent
-import android.net.Uri
+import android.graphics.Typeface
 import android.os.Bundle
-import android.util.DisplayMetrics
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import coil.api.load
 import com.example.nasaapp.R
 import com.example.nasaapp.databinding.PictureOfTheDayFragmentBinding
 import com.example.nasaapp.model.PictureOfTheDayData
+import com.example.nasaapp.ui.App
+import com.example.nasaapp.ui.util.getColorFromAttr
 import com.example.nasaapp.ui.viewmodel.PictureOfTheDayViewModel
-import coil.api.load
-import com.example.nasaapp.model.IThemeProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import java.lang.IllegalArgumentException
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,6 +55,13 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 }
             })
+
+            //Install fronts
+            vb?.bottomSheetPodDetails?.bottomSheetPodDescriptionHeader?.typeface =
+                Typeface.createFromAsset(
+                    requireActivity().assets,
+                    "font/dancing_script_variable_font_wght.ttf"
+                )
         }
     }
 
@@ -64,6 +72,7 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
         })
         initBottomSheet()
     }
+
 
     private fun renderData(pod: PictureOfTheDayData) {
         when (pod) {
@@ -86,11 +95,41 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
                                 val layoutHeight = vb?.podDetailsLayout?.height ?: 0
                                 behavior.peekHeight = layoutHeight - peekRevertHeightPx
                             }
-                            bottomSheetPodDescriptionHeader.text =
-                                pod.ofTheDayResponseData.title
-                            bottomSheetPodDescription.text =
+
+                            val spannableTitle = SpannableString(pod.ofTheDayResponseData.title)
+                            spannableTitle.setSpan(
+                                ForegroundColorSpan(
+                                    requireContext().getColorFromAttr(R.attr.colorSecondaryVariant)
+                                ),
+                                0,
+                                pod.ofTheDayResponseData.title?.length ?: 0,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+
+
+                            bottomSheetPodDescriptionHeader.text = spannableTitle
+                            bottomSheetPodDescription.text = makeDictionaryStyledImageDescription(
                                 pod.ofTheDayResponseData.explanation
-                            bottomSheetPodDateStamp.text = pod.ofTheDayResponseData.date
+                            )
+//                                pod.ofTheDayResponseData.explanation
+
+
+                            val spannableTimestamp = SpannableString(pod.ofTheDayResponseData.date)
+                            spannableTimestamp.setSpan(
+                                ForegroundColorSpan(
+                                    requireContext().getColorFromAttr(R.attr.colorSecondary)
+                                ),
+                                0,
+                                pod.ofTheDayResponseData.date?.length ?: 0,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+                            spannableTimestamp.setSpan(
+                                UnderlineSpan(),
+                                0,
+                                pod.ofTheDayResponseData.date?.length ?: 0,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+                            bottomSheetPodDateStamp.text = spannableTimestamp
                         }
                     }
                 }
@@ -102,6 +141,56 @@ class PictureOfTheDayFragment(val lastDayOffset: Int = 0) : Fragment(), IBackPre
                 //Load Data
             }
         }
+    }
+
+    private fun makeDictionaryStyledImageDescription(text: String?): CharSequence? {
+
+        if (text.isNullOrEmpty()) {
+            return null
+        }
+        val regexMaskBuilder = StringBuilder()
+
+        App.wordsDictionary.keyWords().forEach { keyword ->
+            if (keyword.isNotEmpty()) {
+                val word = if (regexMaskBuilder.length > 0) "${keyword.toLowerCase()}|"
+                else "\\s($keyword|"
+                regexMaskBuilder.append(word)
+            }
+        }
+        if (regexMaskBuilder.isNotEmpty()) {
+            regexMaskBuilder.replace(regexMaskBuilder.length - 1, regexMaskBuilder.length, ")")
+            regexMaskBuilder.append("\\s")
+        }
+
+        val regex = Regex(regexMaskBuilder.toString(), RegexOption.IGNORE_CASE)
+        val matches = regex.find(text)
+
+        val spannableResult = SpannableString(text)
+
+        var match = matches
+        var range: IntRange? = null
+
+        while (match != null) {
+            range = match.range
+            range.let {
+                spannableResult.setSpan(
+                    UnderlineSpan(),
+                    range.start + 1,
+                    range.last,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
+                spannableResult.setSpan(
+                    ForegroundColorSpan(
+                        requireContext().getColorFromAttr(R.attr.colorSecondary)
+                    ),
+                    range.start + 1,
+                    range.last,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+            match = match.next()
+        }
+        return spannableResult
     }
 
     private fun loadImage(url: String) {

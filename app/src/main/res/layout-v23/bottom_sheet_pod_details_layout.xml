@@ -79,6 +79,7 @@
                 style="?attr/bottomSheetStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hyphenationFrequency="normal"
                 android:fontFamily="@font/raleway_thin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
